@@ -1,5 +1,5 @@
 import { ADD_ITEM, REMOVE_ITEM, UPDATE_ITEM } from '../actions';
-import { combineReducers } from 'redux';
+// import { combineReducers } from 'redux';
 
 
 let id = 0;
@@ -24,9 +24,13 @@ const initialState = {
 function items(state = initialState, action) {
     switch (action.type) {
         case ADD_ITEM:
-            return [...state.items, action.payload];
+            return [
+                ...state.slice(0, action.id),
+                action.payload,
+                ...state.slice(action.id)
+            ]
         case REMOVE_ITEM:
-            return [state.items.filter(item => item._id !== action.id)];
+            return state.filter(item => item.id === action.id);
         case UPDATE_ITEM:
             return [state.items.map((item) => {
                 let updatedItem = { ...item };
@@ -38,12 +42,10 @@ function items(state = initialState, action) {
     }
 }
 
-// function expiryApp(state = initialState, action) {
-//     return { items: items(state.items, action) }
-// }
+function expiryApp(state = initialState, action) {
+    return { items: items(state.items, action) }
+}
 
-const expiryApp = combineReducers({
-    items
-})
+// const expiryApp = combineReducers({ items })
 
 export default expiryApp; 

@@ -2,14 +2,17 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App'
 import { createStore } from 'redux';
-import expiryApp from './reducers';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import expiryApp from './reducers/index';
 import {
     addItem,
     removeItem,
     updateItem
 } from './actions'
 
-const store = createStore(expiryApp);
+const store = createStore(expiryApp, composeWithDevTools(
+
+));
 const currentState = store.getState();
 
 const unsubscribe = store.subscribe(() => console.log('current State', currentState));
@@ -37,7 +40,18 @@ const food3 = {
     expiryDate: new Date().toDateString()
 }
 
+const food4 = {
+    id: id++,
+    foodName: 'Pumpkin Seeds',
+    foodType: 'Seeds',
+    expiryDate: new Date().toDateString()
+}
+
 store.dispatch(addItem(food3));
+// store.dispatch(addItem(food4));
+// store.dispatch(removeItem(food2));
+
+const newState = store.getState();
 unsubscribe();
 
 ReactDOM.render(<App />, document.getElementById('root'));
